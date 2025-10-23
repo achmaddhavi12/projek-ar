@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Sejarah Kacirebonan</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js@3.4.5/aframe/build/aframe-ar.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .viewer-mode {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        #scene-container {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .model-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .control-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-card h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .info-card p {
+            color: #555;
+            line-height: 1.8;
+            text-align: justify;
+            margin-bottom: 10px;
+        }
+
+        .ar-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .ar-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .ar-button:active {
+            transform: translateY(0);
+        }
+
+        .ar-mode {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
+
+        .ar-mode.active {
+            display: block;
+        }
+
+        .ar-overlay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 10000;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .close-ar {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 10000;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-item span {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .feature-item p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            #scene-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🕌 Informasi Sejarah Kacirebonan</h1>
+        <p>Jelajahi Sejarah dengan Teknologi Augmented Reality</p>
+    </div>
+
+    <div class="container">
+        <div class="viewer-mode">
+            <div id="scene-container">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Memuat Model 3D...</p>
+                </div>
+                <a-scene 
+                    id="scene" 
+                    embedded 
+                    style="width: 100%; height: 100%;"
+                    vr-mode-ui="enabled: false">
+                    <a-sky color="#87CEEB"></a-sky>
+                    <a-entity 
+                        id="model"
+                        gltf-model="assets/PIP.glb"
+                        position="0 0 -3"
+                        scale="2 2 2"
+                        rotation="0 0 0"
+                        animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear">
+                    </a-entity>
+                    <a-plane position="0 -1 -3" rotation="-90 0 0" width="8" height="8" color="#7BC8A4" shadow></a-plane>
+                    <a-light type="ambient" color="#BBB"></a-light>
+                    <a-light type="directional" color="#FFF" intensity="0.6" position="-0.5 1 1"></a-light>
+                    <a-camera position="0 1.6 0"></a-camera>
+                </a-scene>
+            </div>
+
+            <div class="model-controls">
+                <button class="control-btn" onclick="resetView()">🔄 Reset</button>
+                <button class="control-btn" onclick="zoomIn()">🔍 Zoom In</button>
+                <button class="control-btn" onclick="zoomOut()">🔎 Zoom Out</button>
+            </div>
+
+            <div class="info-card">
+                <h2>Makam Sunan Gunung Jati</h2>
+                <p>
+                    Makam Sunan Gunung Jati merupakan salah satu situs bersejarah penting di Cirebon, Jawa Barat. 
+                    Sunan Gunung Jati adalah salah satu Wali Songo yang berperan besar dalam penyebaran Islam di wilayah Cirebon dan sekitarnya.
+                </p>
+                <p>
+                    Kompleks makam ini terletak di Desa Astana, Kecamatan Gunung Jati, Kabupaten Cirebon. 
+                    Makam ini memiliki arsitektur yang megah dengan gaya khas Islam Jawa dan menjadi tempat ziarah yang ramai dikunjungi.
+                </p>
+                <p>
+                    Sunan Gunung Jati bernama asli Syarif Hidayatullah dan merupakan pendiri Kesultanan Cirebon. 
+                    Beliau wafat pada tahun 1568 M dan dimakamkan di kompleks ini.
+                </p>
+            </div>
+
+            <div class="features">
+                <div class="feature-item">
+                    <span>🎯</span>
+                    <p>Rotasi 360°</p>
+                </div>
+                <div class="feature-item">
+                    <span>📱</span>
+                    <p>AR Ready</p>
+                </div>
+                <div class="feature-item">
+                    <span>📚</span>
+                    <p>Info Lengkap</p>
+                </div>
+                <div class="feature-item">
+                    <span>🔍</span>
+                    <p>Zoom Detail</p>
+                </div>
+            </div>
+
+            <button class="ar-button" onclick="enterAR()">
+                📸 Lihat dalam AR
+                <span style="font-size: 12px; opacity: 0.9;">(Aktifkan Kamera)</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="ar-mode" class="ar-mode">
+        <div class="ar-overlay">
+            <p style="margin: 0; font-size: 14px;">🎯 Arahkan kamera ke permukaan datar</p>
+        </div>
+        <button class="close-ar" onclick="exitAR()">✕ Tutup AR</button>
+        <a-scene 
+            id="ar-scene"
+            embedded
+            arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+            vr-mode-ui="enabled: false">
+            <a-marker preset="hiro">
+                <a-entity 
+                    gltf-model="assets/PIP.glb"
+                    position="0 0.5 0"
+                    scale="0.5 0.5 0.5"
+                    rotation="0 0 0"
+                    animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
+                </a-entity>
+            </a-marker>
+            <a-entity camera></a-entity>
+        </a-scene>
+    </div>
+
+    <script>
+        let currentScale = 2;
+        const model = document.querySelector('#model');
+
+        // Hide loading when scene loads
+        document.querySelector('#scene').addEventListener('loaded', function() {
+            document.querySelector('.loading').style.display = 'none';
+        });
+
+        function resetView() {
+            currentScale = 2;
+            model.setAttribute('scale', `${currentScale} ${currentScale} ${currentScale}`);
+            model.setAttribute('rotation', '0 0 0');
+            model.setAttribute('position', '0 0 -3');
+        }
+
+        function zoomIn() {
+            currentScale += 0.3;
+            if (currentScale > 5) currentScale = 5;
+            model.setAttribute('scale', `${currentScale} ${currentScale} ${currentScale}`);
+        }
+
+        function zoomOut() {
+            currentScale -= 0.3;
+            if (currentScale < 0.5) currentScale = 0.5;
+            model.setAttribute('scale', `${currentScale} ${currentScale} ${currentScale}`);
+        }
+
+        async function enterAR() {
+            const arMode = document.getElementById('ar-mode');
+            
+            try {
+                // Request camera permission
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                
+                // Show AR mode
+                arMode.classList.add('active');
+                
+                // Initialize AR scene
+                const arScene = document.getElementById('ar-scene');
+                
+                // Stop the stream as AR.js will handle it
+                stream.getTracks().forEach(track => track.stop());
+                
+            } catch (err) {
+                alert('❌ Tidak dapat mengakses kamera. Pastikan Anda memberikan izin kamera dan menggunakan HTTPS.');
+                console.error('Camera error:', err);
+            }
+        }
+
+        function exitAR() {
+            const arMode = document.getElementById('ar-mode');
+            arMode.classList.remove('active');
+            
+            // Stop camera
+            const video = document.querySelector('#ar-scene video');
+            if (video && video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+        }
+
+        // Handle drag to rotate
+        let isDragging = false;
+        let previousMouseX = 0;
+        const sceneContainer = document.getElementById('scene-container');
+
+        sceneContainer.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            previousMouseX = e.clientX;
+        });
+
+        sceneContainer.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - previousMouseX;
+            const currentRotation = model.getAttribute('rotation');
+            const newY = currentRotation.y + deltaX * 0.5;
+            
+            model.setAttribute('rotation', `${currentRotation.x} ${newY} ${currentRotation.z}`);
+            model.removeAttribute('animation');
+            
+            previousMouseX = e.clientX;
+        });
+
+        sceneContainer.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        sceneContainer.addEventListener('mouseleave', () => {
+            isDragging = false;
+        });
+
+        // Touch support
+        let previousTouchX = 0;
+
+        sceneContainer.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            previousTouchX = e.touches[0].clientX;
+        });
+
+        sceneContainer.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.touches[0].clientX - previousTouchX;
+            const currentRotation = model.getAttribute('rotation');
+            const newY = currentRotation.y + deltaX * 0.5;
+            
+            model.setAttribute('rotation', `${currentRotation.x} ${newY} ${currentRotation.z}`);
+            model.removeAttribute('animation');
+            
+            previousTouchX = e.touches[0].clientX;
+        });
+
+        sceneContainer.addEventListener('touchend', () => {
+            isDragging = false;
+        });
+    </script>
+</body>
+</html>
