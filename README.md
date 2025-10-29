@@ -343,8 +343,8 @@ MIT License - Free to use and modify
 
 Jika ada pertanyaan atau butuh bantuan:
 1. Buka issue di GitHub repository
-2. Email: your-email@example.com
-3. WhatsApp: +62xxx-xxxx-xxxx
+2. Email: rohiderboy24@gmail.com
+3. WhatsApp: +62 851-7975-3574
 
 ---
 
