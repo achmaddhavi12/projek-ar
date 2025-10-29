@@ -3,431 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Informasi Sejarah Kacirebonan</title>
+    <meta name="description" content="Jelajahi Sejarah Kacirebonan dengan Teknologi Augmented Reality">
+    <title>Informasi Sejarah Kacirebonan - WebAR</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- A-Frame & AR.js -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .header h1 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 5px;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .viewer-mode {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-
-        #scene-container {
-            width: 100%;
-            height: 400px;
-            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        .model-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .control-btn {
-            padding: 10px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .control-btn:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-        }
-
-        .control-btn:active {
-            transform: translateY(0);
-        }
-
-        .info-card {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .info-card h2 {
-            color: #333;
-            font-size: 20px;
-            margin-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .info-card p {
-            color: #555;
-            line-height: 1.8;
-            text-align: justify;
-            margin-bottom: 10px;
-        }
-
-        .ar-button {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .ar-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .ar-button:active {
-            transform: translateY(0);
-        }
-
-        .ar-mode {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 9999;
-            background: #000;
-        }
-
-        .ar-mode.active {
-            display: block;
-        }
-
-        .ar-overlay {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            z-index: 10000;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            max-width: 90%;
-        }
-
-        .ar-overlay p {
-            margin: 0;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .close-ar {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 0, 0, 0.9);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            z-index: 10000;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .ar-controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10000;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            max-width: 90%;
-        }
-
-        .ar-control-btn {
-            background: rgba(102, 126, 234, 0.9);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            backdrop-filter: blur(10px);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #667eea;
-        }
-
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .feature-item {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-item span {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .feature-item p {
-            font-size: 12px;
-            color: #666;
-            margin: 0;
-        }
-
-        .ar-instructions {
-            background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left: 4px solid #ffc107;
-        }
-
-        .ar-instructions h3 {
-            color: #856404;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        .ar-instructions ol {
-            margin-left: 20px;
-            color: #856404;
-        }
-
-        .ar-instructions li {
-            margin-bottom: 5px;
-            line-height: 1.6;
-        }
-
-        #ar-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .ar-model-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 20px;
-            }
-            
-            #scene-container {
-                height: 300px;
-            }
-
-            .ar-overlay {
-                font-size: 12px;
-                padding: 10px 15px;
-            }
-        }
-    </style>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="header">
-        <h1>🕌 Informasi Sejarah Kacirebonan</h1>
-        <p>Jelajahi Sejarah dengan Teknologi Augmented Reality</p>
-    </div>
-
-    <div class="container">
-        <div class="viewer-mode">
-            <div id="scene-container">
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>Memuat Model 3D...</p>
-                </div>
-                <a-scene 
-                    id="scene" 
-                    embedded 
-                    style="width: 100%; height: 100%;"
-                    vr-mode-ui="enabled: false">
-                    <a-sky color="#87CEEB"></a-sky>
-                    <a-entity 
-                        id="model"
-                        gltf-model="assets/PIP.glb"
-                        position="0 0 -3"
-                        scale="2 2 2"
-                        rotation="0 0 0"
-                        animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear">
-                    </a-entity>
-                    <a-plane position="0 -1 -3" rotation="-90 0 0" width="8" height="8" color="#7BC8A4" shadow></a-plane>
-                    <a-light type="ambient" color="#BBB"></a-light>
-                    <a-light type="directional" color="#FFF" intensity="0.6" position="-0.5 1 1"></a-light>
-                    <a-camera position="0 1.6 0"></a-camera>
-                </a-scene>
-            </div>
-
-            <div class="model-controls">
-                <button class="control-btn" onclick="resetView()">🔄 Reset</button>
-                <button class="control-btn" onclick="zoomIn()">🔍 Zoom In</button>
-                <button class="control-btn" onclick="zoomOut()">🔎 Zoom Out</button>
-            </div>
-
-            <div class="info-card">
-                <h2>Makam Sunan Gunung Jati</h2>
-                <p>
-                    Makam Sunan Gunung Jati merupakan salah satu situs bersejarah penting di Cirebon, Jawa Barat. 
-                    Sunan Gunung Jati adalah salah satu Wali Songo yang berperan besar dalam penyebaran Islam di wilayah Cirebon dan sekitarnya.
-                </p>
-                <p>
-                    Kompleks makam ini terletak di Desa Astana, Kecamatan Gunung Jati, Kabupaten Cirebon. 
-                    Makam ini memiliki arsitektur yang megah dengan gaya khas Islam Jawa dan menjadi tempat ziarah yang ramai dikunjungi.
-                </p>
-                <p>
-                    Sunan Gunung Jati bernama asli Syarif Hidayatullah dan merupakan pendiri Kesultanan Cirebon. 
-                    Beliau wafat pada tahun 1568 M dan dimakamkan di kompleks ini.
+<body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 min-h-screen">
+    
+    <!-- Header -->
+    <header class="bg-white/95 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-5">
+            <div class="text-center">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
+                    🕌 Informasi Sejarah Kacirebonan
+                </h1>
+                <p class="text-gray-600 text-sm md:text-base">
+                    Jelajahi Sejarah dengan Teknologi Augmented Reality
                 </p>
             </div>
-
-            <div class="ar-instructions">
-                <h3>📱 Cara Menggunakan Mode AR:</h3>
-                <ol>
-                    <li>Tekan tombol "Lihat dalam AR"</li>
-                    <li>Izinkan akses kamera</li>
-                    <li>Arahkan kamera ke permukaan datar (meja/lantai)</li>
-                    <li>Objek 3D akan muncul di layar</li>
-                    <li>Gerakkan HP untuk melihat dari berbagai sudut</li>
-                </ol>
-            </div>
-
-            <div class="features">
-                <div class="feature-item">
-                    <span>🎯</span>
-                    <p>Rotasi 360°</p>
-                </div>
-                <div class="feature-item">
-                    <span>📱</span>
-                    <p>Tanpa Marker</p>
-                </div>
-                <div class="feature-item">
-                    <span>📚</span>
-                    <p>Info Lengkap</p>
-                </div>
-                <div class="feature-item">
-                    <span>🔍</span>
-                    <p>Zoom Detail</p>
-                </div>
-            </div>
-
-            <button class="ar-button" onclick="enterAR()">
-                📸 Lihat dalam AR
-                <span style="font-size: 12px; opacity: 0.9;">(Aktifkan Kamera)</span>
-            </button>
         </div>
-    </div>
+    </header>
 
-    <div id="ar-mode" class="ar-mode">
-        <video id="ar-video" autoplay playsinline></video>
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
         
+        <!-- Viewer Card -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden mb-6">
+            
+            <!-- 3D Viewer Container -->
+            <div class="relative">
+                <div id="scene-container" class="w-full h-96 md:h-[500px] bg-gradient-to-b from-sky-400 to-sky-100 relative">
+                    
+                    <!-- Loading Indicator -->
+                    <div id="loading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-10">
+                        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mb-4"></div>
+                        <p class="text-indigo-600 font-semibold">Memuat Model 3D...</p>
+                    </div>
+
+                    <!-- A-Frame Scene -->
+                    <a-scene 
+                        id="scene" 
+                        embedded 
+                        class="w-full h-full"
+                        vr-mode-ui="enabled: false">
+                        
+                        <a-sky color="#87CEEB"></a-sky>
+                        
+                        <a-entity 
+                            id="model"
+                            gltf-model="url(./assets/models/PIP.glb)"
+                            position="0 0 -3"
+                            scale="2 2 2"
+                            rotation="0 0 0"
+                            animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear">
+                        </a-entity>
+                        
+                        <a-plane 
+                            position="0 -1 -3" 
+                            rotation="-90 0 0" 
+                            width="8" 
+                            height="8" 
+                            color="#7BC8A4" 
+                            shadow>
+                        </a-plane>
+                        
+                        <a-light type="ambient" color="#BBB"></a-light>
+                        <a-light type="directional" color="#FFF" intensity="0.6" position="-0.5 1 1"></a-light>
+                        
+                        <a-camera position="0 1.6 0"></a-camera>
+                    </a-scene>
+                </div>
+
+                <!-- Model Controls -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+                    <button 
+                        onclick="resetView()" 
+                        class="bg-white/90 hover:bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 flex items-center gap-2">
+                        <span>🔄</span>
+                        <span class="hidden sm:inline">Reset</span>
+                    </button>
+                    <button 
+                        onclick="zoomIn()" 
+                        class="bg-white/90 hover:bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 flex items-center gap-2">
+                        <span>🔍</span>
+                        <span class="hidden sm:inline">Zoom +</span>
+                    </button>
+                    <button 
+                        onclick="zoomOut()" 
+                        class="bg-white/90 hover:bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 flex items-center gap-2">
+                        <span>🔎</span>
+                        <span class="hidden sm:inline">Zoom -</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Info Card -->
+            <div class="p-6 md:p-8">
+                <div class="mb-6">
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 pb-3 border-b-4 border-indigo-500">
+                        Makam Sunan Gunung Jati
+                    </h2>
+                    <div class="space-y-4 text-gray-700 leading-relaxed">
+                        <p class="text-justify">
+                            Makam Sunan Gunung Jati merupakan salah satu situs bersejarah penting di Cirebon, Jawa Barat. 
+                            Sunan Gunung Jati adalah salah satu Wali Songo yang berperan besar dalam penyebaran Islam di wilayah Cirebon dan sekitarnya.
+                        </p>
+                        <p class="text-justify">
+                            Kompleks makam ini terletak di Desa Astana, Kecamatan Gunung Jati, Kabupaten Cirebon. 
+                            Makam ini memiliki arsitektur yang megah dengan gaya khas Islam Jawa dan menjadi tempat ziarah yang ramai dikunjungi.
+                        </p>
+                        <p class="text-justify">
+                            Sunan Gunung Jati bernama asli Syarif Hidayatullah dan merupakan pendiri Kesultanan Cirebon. 
+                            Beliau wafat pada tahun 1568 M dan dimakamkan di kompleks ini.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- AR Instructions -->
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-5 rounded-lg mb-6">
+                    <h3 class="font-bold text-amber-800 mb-3 flex items-center gap-2">
+                        <span>📱</span>
+                        <span>Cara Menggunakan Mode AR:</span>
+                    </h3>
+                    <ol class="list-decimal list-inside space-y-2 text-amber-900 text-sm">
+                        <li>Tekan tombol "Lihat dalam AR"</li>
+                        <li>Izinkan akses kamera pada browser</li>
+                        <li>Arahkan kamera ke permukaan datar (meja/lantai)</li>
+                        <li>Objek 3D akan muncul di layar</li>
+                        <li>Gerakkan HP untuk melihat dari berbagai sudut</li>
+                    </ol>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-3xl mb-2">🎯</div>
+                        <p class="text-sm font-semibold text-gray-700">Rotasi 360°</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-3xl mb-2">📱</div>
+                        <p class="text-sm font-semibold text-gray-700">Tanpa Marker</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-pink-50 to-red-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-3xl mb-2">📚</div>
+                        <p class="text-sm font-semibold text-gray-700">Info Lengkap</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-red-50 to-orange-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="text-3xl mb-2">🔍</div>
+                        <p class="text-sm font-semibold text-gray-700">Zoom Detail</p>
+                    </div>
+                </div>
+
+                <!-- AR Button -->
+                <button 
+                    onclick="enterAR()"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
+                    <span class="text-2xl">📸</span>
+                    <div class="text-left">
+                        <div class="text-lg">Lihat dalam AR</div>
+                        <div class="text-xs opacity-90">(Aktifkan Kamera)</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- AR Mode Overlay -->
+    <div id="ar-mode" class="ar-mode">
+        <!-- Video Background -->
+        <video id="ar-video" autoplay playsinline class="w-full h-full object-cover"></video>
+        
+        <!-- AR Model Container -->
         <div class="ar-model-container">
             <a-scene 
                 id="ar-scene"
                 embedded
                 vr-mode-ui="enabled: false"
                 renderer="logarithmicDepthBuffer: true; precision: medium;"
-                style="width: 100%; height: 100%; pointer-events: none;">
+                class="w-full h-full pointer-events-none">
                 
                 <a-entity 
                     id="ar-model"
-                    gltf-model="assets/PIP.glb"
+                    gltf-model="url(./assets/models/PIP.glb)"
                     position="0 0 -2"
                     scale="1 1 1"
                     rotation="0 0 0"
@@ -442,196 +207,49 @@
             </a-scene>
         </div>
 
-        <div class="ar-overlay">
-            <p><strong>Mode AR Aktif</strong></p>
-            <p>Gerakkan HP untuk melihat objek dari berbagai sudut</p>
+        <!-- AR Overlay Info -->
+        <div class="absolute top-5 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-md text-white px-6 py-4 rounded-xl text-center max-w-sm z-50">
+            <p class="font-bold mb-1">Mode AR Aktif</p>
+            <p class="text-sm">Gerakkan HP untuk melihat objek dari berbagai sudut</p>
         </div>
         
-        <button class="close-ar" onclick="exitAR()">✕ Tutup</button>
+        <!-- Close Button -->
+        <button 
+            onclick="exitAR()"
+            class="absolute top-5 right-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300">
+            ✕ Tutup
+        </button>
         
-        <div class="ar-controls">
-            <button class="ar-control-btn" onclick="arZoomIn()">🔍 Zoom +</button>
-            <button class="ar-control-btn" onclick="arZoomOut()">🔎 Zoom -</button>
-            <button class="ar-control-btn" onclick="arReset()">🔄 Reset</button>
+        <!-- AR Controls -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-50 flex-wrap justify-center max-w-md px-4">
+            <button 
+                onclick="arZoomIn()"
+                class="bg-indigo-600/90 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-lg backdrop-blur-sm shadow-lg transition-all duration-300">
+                🔍 Zoom +
+            </button>
+            <button 
+                onclick="arZoomOut()"
+                class="bg-indigo-600/90 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-lg backdrop-blur-sm shadow-lg transition-all duration-300">
+                🔎 Zoom -
+            </button>
+            <button 
+                onclick="arReset()"
+                class="bg-indigo-600/90 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-lg backdrop-blur-sm shadow-lg transition-all duration-300">
+                🔄 Reset
+            </button>
         </div>
     </div>
 
-    <script>
-        let currentScale = 2;
-        let arScale = 1;
-        const model = document.querySelector('#model');
+    <!-- Footer -->
+    <footer class="bg-white/90 backdrop-blur-sm mt-12 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            <p class="text-sm">
+                © 2024 Informasi Sejarah Kacirebonan - Powered by A-Frame & Tailwind CSS
+            </p>
+        </div>
+    </footer>
 
-        // Hide loading when scene loads
-        document.querySelector('#scene').addEventListener('loaded', function() {
-            document.querySelector('.loading').style.display = 'none';
-        });
-
-        // 3D Viewer Controls
-        function resetView() {
-            currentScale = 2;
-            model.setAttribute('scale', `${currentScale} ${currentScale} ${currentScale}`);
-            model.setAttribute('rotation', '0 0 0');
-            model.setAttribute('position', '0 0 -3');
-        }
-
-        function zoomIn() {
-            currentScale += 0.3;
-            if (currentScale > 5) currentScale = 5;
-            model.setAttribute('scale', `${currentScale} ${currentScale} ${currentScale}`);
-        }
-
-        function zoomOut() {
-            currentScale -= 0.3;
-            if (currentScale < 0.5) currentScale = 0.5;
-            model.setAttribute('scale', `${currentScale} ${currentScale} ${currentScale}`);
-        }
-
-        // AR Mode Controls
-        let videoStream = null;
-
-        async function enterAR() {
-            const arMode = document.getElementById('ar-mode');
-            const video = document.getElementById('ar-video');
-            
-            try {
-                // Request camera permission
-                videoStream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        facingMode: 'environment',
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    } 
-                });
-                
-                video.srcObject = videoStream;
-                await video.play();
-                
-                // Show AR mode
-                arMode.classList.add('active');
-                
-                // Show success message
-                setTimeout(() => {
-                    const overlay = document.querySelector('.ar-overlay p:last-child');
-                    overlay.textContent = '✅ Kamera aktif! Objek 3D ditampilkan di tengah layar';
-                }, 1000);
-                
-            } catch (err) {
-                let errorMsg = '❌ Tidak dapat mengakses kamera.\n\n';
-                
-                if (err.name === 'NotAllowedError') {
-                    errorMsg += 'Silakan izinkan akses kamera di pengaturan browser Anda.';
-                } else if (err.name === 'NotFoundError') {
-                    errorMsg += 'Kamera tidak ditemukan di perangkat Anda.';
-                } else if (err.name === 'NotSupportedError') {
-                    errorMsg += 'Browser Anda tidak mendukung akses kamera atau gunakan HTTPS.';
-                } else {
-                    errorMsg += 'Error: ' + err.message;
-                }
-                
-                alert(errorMsg);
-                console.error('Camera error:', err);
-            }
-        }
-
-        function exitAR() {
-            const arMode = document.getElementById('ar-mode');
-            arMode.classList.remove('active');
-            
-            // Stop camera
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-                videoStream = null;
-            }
-            
-            const video = document.getElementById('ar-video');
-            video.srcObject = null;
-        }
-
-        // AR Model Controls
-        function arZoomIn() {
-            const arModel = document.getElementById('ar-model');
-            arScale += 0.2;
-            if (arScale > 3) arScale = 3;
-            arModel.setAttribute('scale', `${arScale} ${arScale} ${arScale}`);
-        }
-
-        function arZoomOut() {
-            const arModel = document.getElementById('ar-model');
-            arScale -= 0.2;
-            if (arScale < 0.3) arScale = 0.3;
-            arModel.setAttribute('scale', `${arScale} ${arScale} ${arScale}`);
-        }
-
-        function arReset() {
-            const arModel = document.getElementById('ar-model');
-            arScale = 1;
-            arModel.setAttribute('scale', '1 1 1');
-            arModel.setAttribute('position', '0 0 -2');
-        }
-
-        // Handle drag to rotate in 3D viewer
-        let isDragging = false;
-        let previousMouseX = 0;
-        const sceneContainer = document.getElementById('scene-container');
-
-        sceneContainer.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            previousMouseX = e.clientX;
-        });
-
-        sceneContainer.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            
-            const deltaX = e.clientX - previousMouseX;
-            const currentRotation = model.getAttribute('rotation');
-            const newY = currentRotation.y + deltaX * 0.5;
-            
-            model.setAttribute('rotation', `${currentRotation.x} ${newY} ${currentRotation.z}`);
-            model.removeAttribute('animation');
-            
-            previousMouseX = e.clientX;
-        });
-
-        sceneContainer.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        sceneContainer.addEventListener('mouseleave', () => {
-            isDragging = false;
-        });
-
-        // Touch support for mobile
-        let previousTouchX = 0;
-
-        sceneContainer.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            previousTouchX = e.touches[0].clientX;
-        });
-
-        sceneContainer.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            
-            const deltaX = e.touches[0].clientX - previousTouchX;
-            const currentRotation = model.getAttribute('rotation');
-            const newY = currentRotation.y + deltaX * 0.5;
-            
-            model.setAttribute('rotation', `${currentRotation.x} ${newY} ${currentRotation.z}`);
-            model.removeAttribute('animation');
-            
-            previousTouchX = e.touches[0].clientX;
-        });
-
-        sceneContainer.addEventListener('touchend', () => {
-            isDragging = false;
-        });
-
-        // Clean up on page unload
-        window.addEventListener('beforeunload', () => {
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-            }
-        });
-    </script>
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
 </body>
 </html>
