@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Jelajahi Sejarah Kacirebonan dengan Teknologi Augmented Reality">
-    <title>Informasi Sejarah Kacirebonan - WebAR</title>
-    
+    <title>informasi Buku Seni Merayu Tuhan - WebAR</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- A-Frame & AR.js -->
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    
+
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
+
 <body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 min-h-screen">
-    
+
     <!-- Header -->
     <header class="bg-white/95 backdrop-blur-sm shadow-lg sticky top-0 z-50">
         <div class="container mx-auto px-4 py-5">
             <div class="text-center">
                 <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-                    🕌 Informasi Sejarah Kacirebonan
+                    Buku Seni Merayu Tuhan
                 </h1>
                 <p class="text-gray-600 text-sm md:text-base">
                     Jelajahi Sejarah dengan Teknologi Augmented Reality
@@ -33,96 +36,37 @@
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8 max-w-4xl">
-        
+
         <!-- Viewer Card -->
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden mb-6">
-            
-            <!-- 3D Viewer Container -->
-            <div class="relative">
-                <div id="scene-container" class="w-full h-96 md:h-[500px] bg-gradient-to-b from-sky-400 to-sky-100 relative">
-                    
-                    <!-- Loading Indicator -->
-                    <div id="loading" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-10">
-                        <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mb-4"></div>
-                        <p class="text-indigo-600 font-semibold">Memuat Model 3D...</p>
-                    </div>
 
-                    <!-- A-Frame Scene -->
-                    <a-scene 
-                        id="scene" 
-                        embedded 
-                        class="w-full h-full"
-                        vr-mode-ui="enabled: false">
-                        
-                        <a-sky color="#87CEEB"></a-sky>
-                        
-                        <a-entity 
-                            id="model"
-                            gltf-model="url(./assets/models/PIP.glb)"
-                            position="0 0 -3"
-                            scale="2 2 2"
-                            rotation="0 0 0"
-                            animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear">
-                        </a-entity>
-                        
-                        <a-plane 
-                            position="0 -1 -3" 
-                            rotation="-90 0 0" 
-                            width="8" 
-                            height="8" 
-                            color="#7BC8A4" 
-                            shadow>
-                        </a-plane>
-                        
-                        <a-light type="ambient" color="#BBB"></a-light>
-                        <a-light type="directional" color="#FFF" intensity="0.6" position="-0.5 1 1"></a-light>
-                        
-                        <a-camera position="0 1.6 0"></a-camera>
-                    </a-scene>
-                </div>
+            <!-- 2D Image Default -->
+            <div id="viewer-2d"
+                class="relative w-full h-96 md:h-[500px] bg-gradient-to-b from-sky-400 to-sky-100 flex items-center justify-center">
+                <img src="./assets/models/bg.jpeg"
+                    alt="Buku Seni Merayu Tuhan" class="max-h-full max-w-full rounded-lg shadow-lg object-cover">
+            </div>
 
-                <!-- Model Controls -->
-                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-                    <button 
-                        onclick="resetView()" 
-                        class="bg-white/90 hover:bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 flex items-center gap-2">
-                        <span>🔄</span>
-                        <span class="hidden sm:inline">Reset</span>
-                    </button>
-                    <button 
-                        onclick="zoomIn()" 
-                        class="bg-white/90 hover:bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 flex items-center gap-2">
-                        <span>🔍</span>
-                        <span class="hidden sm:inline">Zoom +</span>
-                    </button>
-                    <button 
-                        onclick="zoomOut()" 
-                        class="bg-white/90 hover:bg-white text-indigo-600 font-semibold px-4 py-2 rounded-lg shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 flex items-center gap-2">
-                        <span>🔎</span>
-                        <span class="hidden sm:inline">Zoom -</span>
-                    </button>
-                </div>
+            <!-- 3D Viewer Hidden -->
+            <div id="viewer-3d"
+                class="hidden relative w-full h-96 md:h-[500px] bg-gradient-to-b from-sky-400 to-sky-100">
+                <iframe src="https://viewer.assemblrworld.com/Preview/-YWv8rdwyUwtetUCne8d"
+                    class="w-full h-full border-0 rounded-none" allow="camera; gyroscope; accelerometer"
+                    allowfullscreen>
+                </iframe>
             </div>
 
             <!-- Info Card -->
             <div class="p-6 md:p-8">
                 <div class="mb-6">
                     <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 pb-3 border-b-4 border-indigo-500">
-                        Makam Sunan Gunung Jati
+                        Data Referensi Buku
                     </h2>
                     <div class="space-y-4 text-gray-700 leading-relaxed">
-                        <p class="text-justify">
-                            Makam Sunan Gunung Jati merupakan salah satu situs bersejarah penting di Cirebon, Jawa Barat. 
-                            Sunan Gunung Jati adalah salah satu Wali Songo yang berperan besar dalam penyebaran Islam di wilayah Cirebon dan sekitarnya.
-                        </p>
-                        <p class="text-justify">
-                            Kompleks makam ini terletak di Desa Astana, Kecamatan Gunung Jati, Kabupaten Cirebon. 
-                            Makam ini memiliki arsitektur yang megah dengan gaya khas Islam Jawa dan menjadi tempat ziarah yang ramai dikunjungi.
-                        </p>
-                        <p class="text-justify">
-                            Sunan Gunung Jati bernama asli Syarif Hidayatullah dan merupakan pendiri Kesultanan Cirebon. 
-                            Beliau wafat pada tahun 1568 M dan dimakamkan di kompleks ini.
-                        </p>
+                        <p><span class="font-semibold">📖 Judul Buku:</span> Buku Seni Merayu Tuhan </p>
+                        <p><span class="font-semibold">✍️ Penulis:</span> Husein Ja'far Al-Hadar</p>
+                        <p><span class="font-semibold">🏢 Penerbit:</span> PT Mizan Pustaka</p>
+                        <p><span class="font-semibold">📅 Tahun Terbit:</span> 2022</p>
                     </div>
                 </div>
 
@@ -133,7 +77,7 @@
                         <span>Cara Menggunakan Mode AR:</span>
                     </h3>
                     <ol class="list-decimal list-inside space-y-2 text-amber-900 text-sm">
-                        <li>Tekan tombol "Lihat dalam AR"</li>
+                        <li>Tekan tombol "Tampilkan 3D / AR"</li>
                         <li>Izinkan akses kamera pada browser</li>
                         <li>Arahkan kamera ke permukaan datar (meja/lantai)</li>
                         <li>Objek 3D akan muncul di layar</li>
@@ -143,32 +87,35 @@
 
                 <!-- Features Grid -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div
+                        class="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
                         <div class="text-3xl mb-2">🎯</div>
                         <p class="text-sm font-semibold text-gray-700">Rotasi 360°</p>
                     </div>
-                    <div class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div
+                        class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
                         <div class="text-3xl mb-2">📱</div>
                         <p class="text-sm font-semibold text-gray-700">Tanpa Marker</p>
                     </div>
-                    <div class="bg-gradient-to-br from-pink-50 to-red-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div
+                        class="bg-gradient-to-br from-pink-50 to-red-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
                         <div class="text-3xl mb-2">📚</div>
                         <p class="text-sm font-semibold text-gray-700">Info Lengkap</p>
                     </div>
-                    <div class="bg-gradient-to-br from-red-50 to-orange-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <div
+                        class="bg-gradient-to-br from-red-50 to-orange-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
                         <div class="text-3xl mb-2">🔍</div>
                         <p class="text-sm font-semibold text-gray-700">Zoom Detail</p>
                     </div>
                 </div>
 
-                <!-- AR Button -->
-                <button 
-                    onclick="enterAR()"
+                <!-- Toggle 3D Button -->
+                <button id="toggle-3d"
                     class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
-                    <span class="text-2xl">📸</span>
+                    <span class="text-2xl">👁️</span>
                     <div class="text-left">
-                        <div class="text-lg">Lihat dalam AR</div>
-                        <div class="text-xs opacity-90">(Aktifkan Kamera)</div>
+                        <div class="text-lg">Tampilkan 3D / AR</div>
+                        <div class="text-xs opacity-90">(Klik untuk melihat model 3D)</div>
                     </div>
                 </button>
             </div>
@@ -176,80 +123,36 @@
 
     </main>
 
-    <!-- AR Mode Overlay -->
-    <div id="ar-mode" class="ar-mode">
-        <!-- Video Background -->
-        <video id="ar-video" autoplay playsinline class="w-full h-full object-cover"></video>
-        
-        <!-- AR Model Container -->
-        <div class="ar-model-container">
-            <a-scene 
-                id="ar-scene"
-                embedded
-                vr-mode-ui="enabled: false"
-                renderer="logarithmicDepthBuffer: true; precision: medium;"
-                class="w-full h-full pointer-events-none">
-                
-                <a-entity 
-                    id="ar-model"
-                    gltf-model="url(./assets/models/PIP.glb)"
-                    position="0 0 -2"
-                    scale="1 1 1"
-                    rotation="0 0 0"
-                    animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear">
-                </a-entity>
-                
-                <a-light type="ambient" color="#FFF" intensity="1"></a-light>
-                <a-light type="directional" color="#FFF" intensity="0.8" position="1 1 1"></a-light>
-                <a-light type="point" color="#FFF" intensity="0.5" position="-1 1 -1"></a-light>
-                
-                <a-camera position="0 0 0"></a-camera>
-            </a-scene>
-        </div>
-
-        <!-- AR Overlay Info -->
-        <div class="absolute top-5 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-md text-white px-6 py-4 rounded-xl text-center max-w-sm z-50">
-            <p class="font-bold mb-1">Mode AR Aktif</p>
-            <p class="text-sm">Gerakkan HP untuk melihat objek dari berbagai sudut</p>
-        </div>
-        
-        <!-- Close Button -->
-        <button 
-            onclick="exitAR()"
-            class="absolute top-5 right-5 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300">
-            ✕ Tutup
-        </button>
-        
-        <!-- AR Controls -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-3 z-50 flex-wrap justify-center max-w-md px-4">
-            <button 
-                onclick="arZoomIn()"
-                class="bg-indigo-600/90 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-lg backdrop-blur-sm shadow-lg transition-all duration-300">
-                🔍 Zoom +
-            </button>
-            <button 
-                onclick="arZoomOut()"
-                class="bg-indigo-600/90 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-lg backdrop-blur-sm shadow-lg transition-all duration-300">
-                🔎 Zoom -
-            </button>
-            <button 
-                onclick="arReset()"
-                class="bg-indigo-600/90 hover:bg-indigo-700 text-white font-bold px-5 py-3 rounded-lg backdrop-blur-sm shadow-lg transition-all duration-300">
-                🔄 Reset
-            </button>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="bg-white/90 backdrop-blur-sm mt-12 py-6">
         <div class="container mx-auto px-4 text-center text-gray-600">
             <p class="text-sm">
-                © 2024 Informasi Sejarah Kacirebonan - Powered by A-Frame & Tailwind CSS
+                © 2024 Informasi Buku Seni Merayu Tuhan - Powered by A-Frame & Tailwind CSS
             </p>
         </div>
     </footer>
 
-    <!-- Custom JavaScript -->
-    <script src="script.js"></script>
+    <!-- Script -->
+    <script>
+        const toggleBtn = document.getElementById("toggle-3d");
+        const viewer2d = document.getElementById("viewer-2d");
+        const viewer3d = document.getElementById("viewer-3d");
+
+        toggleBtn.addEventListener("click", () => {
+            viewer2d.classList.toggle("hidden");
+            viewer3d.classList.toggle("hidden");
+
+            // Ganti teks tombol sesuai mode
+            if (viewer3d.classList.contains("hidden")) {
+                toggleBtn.querySelector("div > .text-lg").textContent = "Tampilkan 3D / AR";
+                toggleBtn.querySelector("div > .text-xs").textContent = "(Klik untuk melihat model 3D)";
+            } else {
+                toggleBtn.querySelector("div > .text-lg").textContent = "Kembali ke Tampilan 2D";
+                toggleBtn.querySelector("div > .text-xs").textContent = "(Klik untuk kembali ke gambar)";
+            }
+        });
+    </script>
+
 </body>
+
 </html>
