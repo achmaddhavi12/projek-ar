@@ -5,15 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Jelajahi Sejarah Kacirebonan dengan Teknologi Augmented Reality">
-    <title>informasi Buku Seni Merayu Tuhan - WebAR</title>
+    <title>Informasi Buku Kami Bukan Sarjana Kertas - WebAR</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Custom CSS -->
+    <!-- A-Frame + MindAR.js -->
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.6/dist/aframe/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.6/dist/aframe/mindar-image-aframe.prod.js"></script>
+
     <style>
         .hidden {
             display: none;
+        }
+
+        #ar-scan {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        a-scene {
+            width: 100%;
+            height: 100%;
+        }
+
+        video#camera {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.75rem;
         }
     </style>
 </head>
@@ -22,94 +43,74 @@
 
     <!-- Header -->
     <header class="bg-white/95 backdrop-blur-sm shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-5">
-            <div class="text-center">
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">
-                    Buku Seni Merayu Tuhan
-                </h1>
-                <p class="text-gray-600 text-sm md:text-base">
-                    Jelajahi Sejarah dengan Teknologi Augmented Reality
-                </p>
-            </div>
+        <div class="container mx-auto px-4 py-5 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Buku Seni Merayu Tuhan</h1>
+            <p class="text-gray-600 text-sm md:text-base">Jelajahi Sejarah dengan Teknologi Augmented Reality</p>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8 max-w-4xl">
 
-        <!-- Viewer Card -->
         <div class="bg-white rounded-2xl shadow-2xl overflow-hidden mb-6">
-
-            <!-- 2D Image Default -->
+            <!-- 2D Viewer -->
             <div id="viewer-2d"
                 class="relative w-full h-96 md:h-[500px] bg-gradient-to-b from-sky-400 to-sky-100 flex items-center justify-center">
-                <img src="./assets/models/bg.jpeg"
-                    alt="Buku Seni Merayu Tuhan" class="max-h-full max-w-full rounded-lg shadow-lg object-cover">
+                <img src="./assets/models/bg.jpeg" alt="Buku Seni Merayu Tuhan"
+                    class="max-h-full max-w-full rounded-lg shadow-lg object-cover">
             </div>
 
-            <!-- 3D Viewer Hidden -->
+            <!-- 3D / AR Viewer -->
             <div id="viewer-3d"
                 class="hidden relative w-full h-96 md:h-[500px] bg-gradient-to-b from-sky-400 to-sky-100">
+
+                <!-- 3D Viewer dari Assemblr -->
                 <iframe src="https://viewer.assemblrworld.com/Preview/-YWv8rdwyUwtetUCne8d"
                     class="w-full h-full border-0 rounded-none" allow="camera; gyroscope; accelerometer"
-                    allowfullscreen>
-                </iframe>
+                    allowfullscreen></iframe>
+
+                <!-- Tambahan Kamera Scan (MindAR) -->
+                <div id="ar-scan" class="absolute inset-0 hidden">
+                    <a-scene mindar-image="imageTargetSrc: ./assets/marker/marker.mind;" color-space="sRGB" embedded
+                        renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false"
+                        device-orientation-permission-ui="enabled: true">
+                        <a-camera position="0 0 0" look-controls="enabled: true"></a-camera>
+
+                        <!-- Marker Target -->
+                        <a-entity mindar-image-target="targetIndex: 0">
+                            <a-gltf-model src="./assets/models/book.glb" position="0 0 0" scale="0.4 0.4 0.4"
+                                rotation="0 0 0" animation-mixer></a-gltf-model>
+                        </a-entity>
+                    </a-scene>
+                </div>
             </div>
 
             <!-- Info Card -->
             <div class="p-6 md:p-8">
-                <div class="mb-6">
-                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 pb-3 border-b-4 border-indigo-500">
-                        Data Referensi Buku
-                    </h2>
-                    <div class="space-y-4 text-gray-700 leading-relaxed">
-                        <p><span class="font-semibold">📖 Judul Buku:</span> Buku Seni Merayu Tuhan </p>
-                        <p><span class="font-semibold">✍️ Penulis:</span> Husein Ja'far Al-Hadar</p>
-                        <p><span class="font-semibold">🏢 Penerbit:</span> PT Mizan Pustaka</p>
-                        <p><span class="font-semibold">📅 Tahun Terbit:</span> 2022</p>
-                    </div>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 pb-3 border-b-4 border-indigo-500">
+                    Data Referensi Buku
+                </h2>
+                <div class="space-y-4 text-gray-700 leading-relaxed">
+                    <p><span class="font-semibold">📖 Judul Buku:</span> Buku Seni Merayu Tuhan </p>
+                    <p><span class="font-semibold">✍️ Penulis:</span> Husein Ja'far Al-Hadar</p>
+                    <p><span class="font-semibold">🏢 Penerbit:</span> PT Mizan Pustaka</p>
+                    <p><span class="font-semibold">📅 Tahun Terbit:</span> 2022</p>
                 </div>
 
-                <!-- AR Instructions -->
-                <div class="bg-amber-50 border-l-4 border-amber-400 p-5 rounded-lg mb-6">
+                <div class="bg-amber-50 border-l-4 border-amber-400 p-5 rounded-lg my-6">
                     <h3 class="font-bold text-amber-800 mb-3 flex items-center gap-2">
                         <span>📱</span>
                         <span>Cara Menggunakan Mode AR:</span>
                     </h3>
                     <ol class="list-decimal list-inside space-y-2 text-amber-900 text-sm">
                         <li>Tekan tombol "Tampilkan 3D / AR"</li>
-                        <li>Izinkan akses kamera pada browser</li>
-                        <li>Arahkan kamera ke permukaan datar (meja/lantai)</li>
-                        <li>Objek 3D akan muncul di layar</li>
-                        <li>Gerakkan HP untuk melihat dari berbagai sudut</li>
+                        <li>Izinkan akses kamera</li>
+                        <li>Arahkan kamera ke marker gambar</li>
+                        <li>Model 3D akan muncul di atas marker</li>
                     </ol>
                 </div>
 
-                <!-- Features Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div
-                        class="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="text-3xl mb-2">🎯</div>
-                        <p class="text-sm font-semibold text-gray-700">Rotasi 360°</p>
-                    </div>
-                    <div
-                        class="bg-gradient-to-br from-purple-50 to-pink-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="text-3xl mb-2">📱</div>
-                        <p class="text-sm font-semibold text-gray-700">Tanpa Marker</p>
-                    </div>
-                    <div
-                        class="bg-gradient-to-br from-pink-50 to-red-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="text-3xl mb-2">📚</div>
-                        <p class="text-sm font-semibold text-gray-700">Info Lengkap</p>
-                    </div>
-                    <div
-                        class="bg-gradient-to-br from-red-50 to-orange-50 p-4 rounded-xl text-center shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="text-3xl mb-2">🔍</div>
-                        <p class="text-sm font-semibold text-gray-700">Zoom Detail</p>
-                    </div>
-                </div>
-
-                <!-- Toggle 3D Button -->
+                <!-- Tombol -->
                 <button id="toggle-3d"
                     class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-5 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3">
                     <span class="text-2xl">👁️</span>
@@ -118,41 +119,54 @@
                         <div class="text-xs opacity-90">(Klik untuk melihat model 3D)</div>
                     </div>
                 </button>
+
+                <!-- Tambahan tombol untuk mode scan -->
+                <button id="toggle-scan"
+                    class="w-full mt-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
+                    🔍 Aktifkan Mode Scan Marker
+                </button>
             </div>
         </div>
-
     </main>
 
     <!-- Footer -->
-    <footer class="bg-white/90 backdrop-blur-sm mt-12 py-6">
-        <div class="container mx-auto px-4 text-center text-gray-600">
-            <p class="text-sm">
-                © 2024 Informasi Buku Seni Merayu Tuhan - Powered by A-Frame & Tailwind CSS
-            </p>
-        </div>
+    <footer class="bg-white/90 backdrop-blur-sm mt-12 py-6 text-center text-gray-600">
+        <p class="text-sm">
+            © 2024 Informasi Buku Seni Merayu Tuhan - Powered by A-Frame & Tailwind CSS
+        </p>
     </footer>
 
     <!-- Script -->
     <script>
-        const toggleBtn = document.getElementById("toggle-3d");
+        const toggle3D = document.getElementById("toggle-3d");
+        const toggleScan = document.getElementById("toggle-scan");
         const viewer2d = document.getElementById("viewer-2d");
         const viewer3d = document.getElementById("viewer-3d");
+        const arScan = document.getElementById("ar-scan");
 
-        toggleBtn.addEventListener("click", () => {
+        // Tombol tampilkan 3D
+        toggle3D.addEventListener("click", () => {
             viewer2d.classList.toggle("hidden");
             viewer3d.classList.toggle("hidden");
 
-            // Ganti teks tombol sesuai mode
             if (viewer3d.classList.contains("hidden")) {
-                toggleBtn.querySelector("div > .text-lg").textContent = "Tampilkan 3D / AR";
-                toggleBtn.querySelector("div > .text-xs").textContent = "(Klik untuk melihat model 3D)";
+                toggle3D.querySelector(".text-lg").textContent = "Tampilkan 3D / AR";
+                toggle3D.querySelector(".text-xs").textContent = "(Klik untuk melihat model 3D)";
+                arScan.classList.add("hidden");
             } else {
-                toggleBtn.querySelector("div > .text-lg").textContent = "Kembali ke Tampilan 2D";
-                toggleBtn.querySelector("div > .text-xs").textContent = "(Klik untuk kembali ke gambar)";
+                toggle3D.querySelector(".text-lg").textContent = "Kembali ke Tampilan 2D";
+                toggle3D.querySelector(".text-xs").textContent = "(Klik untuk kembali ke gambar)";
+            }
+        });
+
+        // Tombol scan marker
+        toggleScan.addEventListener("click", () => {
+            arScan.classList.toggle("hidden");
+
+            if (!arScan.classList.contains("hidden")) {
+                toggleScan.textContent = "❌ Tutup Mode Scan Marker";
+            } else {
+                toggleScan.textContent = "🔍 Aktifkan Mode Scan Marker";
             }
         });
     </script>
-
-</body>
-
-</html>
